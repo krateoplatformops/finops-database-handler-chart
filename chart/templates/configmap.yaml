@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "finops-database-handler.fullname" . }}
+  labels:
+  {{- include "finops-database-handler.labels" . | nindent 4 }}
+data:
+  CRATE_HOST: "{{ .Values.env.CRATE_HOST }}"
+  CRATE_PORT: "{{ .Values.env.CRATE_PORT }}"
