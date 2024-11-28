@@ -5,5 +5,6 @@ metadata:
   labels:
   {{- include "finops-database-handler.labels" . | nindent 4 }}
 data:
-  CRATE_HOST: "{{ .Values.env.CRATE_HOST }}"
-  CRATE_PORT: "{{ .Values.env.CRATE_PORT }}"
+  {{- range $key, $value := .Values.env }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }} 
