@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 # This is the name of the secret that contains the CrateDB password, dependent on the CrateDB installation name
-cratedb-user-system-name: user-system-cratedb-cluster
+cratedbUserSystemName: user-system-cratedb-cluster
 
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 replicaCount: 1

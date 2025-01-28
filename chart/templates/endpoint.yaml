@@ -6,9 +6,9 @@ metadata:
 stringData:
   server-url: http://{{ include "finops-database-handler.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
   username: system
-  password: |
-    {{- $secretName := .Values.cratedb-user-system-name -}}
-    {{- $secret := lookup "v1" "Secret" "finops" $secretName -}}
-    {{- if $secret.data.password -}}
-    {{- $secret.data.password | b64decode -}}
-    {{- end -}}
+  password: |-
+    {{- $secretName := .Values.cratedbUserSystemName }}
+    {{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName }}
+    {{- if $secret }}
+    {{- $secret.data.password }}
+    {{- end }}
