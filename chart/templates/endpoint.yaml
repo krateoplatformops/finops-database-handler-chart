@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Secret
+type: Opaque
+metadata:
+  name: {{ include "finops-database-handler.fullname" . }}-endpoint
+stringData:
+  server-url: http://{{ include "finops-database-handler.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
+  username: system
+  password: |-
+    {{- $secretName := .Values.cratedbUserSystemName }}
+    {{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName }}
+    {{- if $secret }}
+    {{- $secret.data.password }}
+    {{- end }}
