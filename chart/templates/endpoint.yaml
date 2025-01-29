@@ -10,4 +10,15 @@ stringData:
   server-url: http://{{ include "finops-database-handler.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
   username: system
   password: {{ $secret.data.password }}
+---
+apiVersion: finops.krateo.io/v1
+kind: DatabaseConfig
+metadata:
+  name: {{ include "finops-database-handler.fullname" . }}
+spec:
+  username: system
+  passwordSecretRef:
+    name: {{ .Values.cratedbUserSystemName }}
+    namespace: {{ .Release.Namespace }}
+    key: password
 {{- end }}
