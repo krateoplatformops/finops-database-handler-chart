@@ -1,16 +1,18 @@
-{{- $secretName := .Values.cratedbUserSystemName }}
-{{- $secret := lookup "v1" "Secret" .Release.Namespace $secretName }}
-{{- if $secret }}
+{{- $endpointSecretName := printf "%s-endpoint" (include "finops-database-handler.fullname" .) }}
+{{- $endpointSecret := lookup "v1" "Secret" .Release.Namespace $endpointSecretName }}
+{{- $sourceSecret := lookup "v1" "Secret" .Release.Namespace .Values.cratedbUserSystemName }}
+{{- if and (not $endpointSecret) $sourceSecret }}
 apiVersion: v1
 kind: Secret
 type: Opaque
 metadata:
-  name: {{ include "finops-database-handler.fullname" . }}-endpoint
+  name: {{ $endpointSecretName }}
 stringData:
   server-url: http://{{ include "finops-database-handler.fullname" . }}.{{ .Release.Namespace }}.svc:{{ .Values.service.port }}
   username: system
-  password: {{ $secret.data.password | b64dec | quote }}
+  password: {{ $sourceSecret.data.password | b64dec | quote }}
 ---
+{{- end }}
 apiVersion: finops.krateo.io/v1
 kind: DatabaseConfig
 metadata:
@@ -21,4 +23,3 @@ spec:
     name: {{ .Values.cratedbUserSystemName }}
     namespace: {{ .Release.Namespace }}
     key: password
-{{- end }}
